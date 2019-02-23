@@ -1,3 +1,5 @@
+## Testing and Debugging ##
+
 #### Classes of Tests ####
 
 * Unit testing
@@ -53,3 +55,80 @@ def abs(x):
 * path-complete test suite: 2 and -2
 * but abs(-1) incorrectly returns -1
 * should still test boundary cases
+
+#### Runtime bugs ####
+* Overt vs covert:
+	* _Overt_ has an obvious manifestation - code crashed or runs forever
+	* _Covert_ has no obvious manifestation - code returns a value, which may be incorrect but hard to determine
+* Persistent vs intermittent:
+	* _Persistent_ occurs every time code is run
+	* _Intermittent_ only occurs some times, even if run on same input
+
+Categories:
+* Overt and persistent
+	* Obvious to detect
+	* Good programmers use _defensive programming_ to try to ensure that if error is made, bug will fall into this category
+* Overt and intermittent
+	* More frustrating, can be harder to debug, but if conditions that prompt bug can be reproduced, can be handled
+* Covert
+	* Highly dangerous, as users may not realize answers are incorrect until code has been run for long period
+
+## Exceptions and Assertions ##
+
+* Exceptions - what happens when procedure execution hits an unexpected condition?
+
+Example exception usage:
+```python
+while True:
+	try:
+		n = input('Please enter an integer: ')
+		n = int(n)
+		break
+	except ValueError:
+		print('Input not an integer; try again')
+	print('Correct input of an integer!')
+```
+
+Example: control inputs
+```python
+data = []
+file_name = input('Provide a name of a file of data ')
+
+try:
+	fh = open(file_name, 'r')
+except IOError:
+	print('cannot open', file_name)
+else:
+	for new in fh:
+		if new != '\n':
+			addIt = new[:-1].split(',')
+			data.append(addIt)
+finally:
+	fh.close()
+
+gradeData = []
+if data:
+	for student in data:
+		try:
+			name = student[:-1]
+			grades = int(student[-1])
+			gradesData.append([name, [grades]])
+		except ValueError:
+			gradesData.append(student[:], [])
+```
+
+Example: raising an exception
+```python
+def get_ratios(L1, L2):
+	''' Assumes: L1 and L2 are lists of equal length of numbers
+		Returns: a list containing L1[i]/L2[i] '''
+	ratios = []
+	for index in range(len(L1)):
+		try:
+			ratios.append(L1[index]/float(L2(index)))
+		except ZeroDivisionError:
+			ratios.append(float('NaN'))
+		except:
+			raise ValueError('get_ratios called with bad arg')
+	return ratios
+```
