@@ -142,9 +142,6 @@ def playGame(wordList):
                     playHand(hand, wordList, HAND_SIZE)
                 else:
                     compPlayHand(hand, wordList, HAND_SIZE)
-                hand_count += 1
-                old_hand = hand
-
         elif init_input == 'n':
             hand = dealHand(HAND_SIZE)
 
