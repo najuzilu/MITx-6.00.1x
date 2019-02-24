@@ -132,3 +132,22 @@ def get_ratios(L1, L2):
 			raise ValueError('get_ratios called with bad arg')
 	return ratios
 ```
+
+## Assertions ##
+* want to be sure that assumptions on state of computation are as expected
+* user an _assert statement_ to raise an `AssertionError` exception if assumptions not met
+* an example of good _defensive programming_
+
+Example
+```python
+def avg(grades):
+	assert not len(grades) == 0, 'no grades data'
+	return sum(grades)/len(grades)
+```
+
+###### Assertions as defensive programming ######
+* assertions don't allow a programmer to control response to unexpected conditions
+* ensure that execution halts whenever an expected condition is not met
+* typically used to check inputs to functions procedures, but can be used anywhere
+* can be used to check output of a function to avoid propagating bad values
+* can make it easier to locate a source of a bug
