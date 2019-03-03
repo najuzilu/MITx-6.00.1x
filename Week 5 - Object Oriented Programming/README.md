@@ -1044,7 +1044,7 @@ def allStudents(self):
 **Answer**: 2
 5. Finding the nth Fibonacci number  
 **Answer**: Standard function
-6. Printing out an unbounded sequence of Fibonacci numbers 
+6. Printing out an unbounded sequence of Fibonacci numbers  
 **Answer**: Generator
 7. Printing out a bounded sequence of prime numbers, where the prime numbers are successively computed by division by smaller primes  
 **Answer**: Either a generator or standard function is fine
