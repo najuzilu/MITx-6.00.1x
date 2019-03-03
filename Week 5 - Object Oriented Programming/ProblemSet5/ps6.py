@@ -249,14 +249,20 @@ class CiphertextMessage(Message):
         max_ = max(dict_answer.values())
         (k, v), = {k : v for k, v in dict_answer.items() if v == max_}.items()
         return (k, Message.apply_shift(self, k))
-        
+     
+def decrypt_story():
+    lines = get_story_string()   
+    encryted_text = CiphertextMessage(lines)
+    return encryted_text.decrypt_message()
+
+print(decrypt_story())
 
 #Example test case (PlaintextMessage)
 # plaintext = PlaintextMessage('Message is Nonsense words: sweat nobody mild moderate passage official melt substance fond door family slight remain sun govern dead bank sock hold brush divide end accept it whole correct north country float agree otherwise cup wind coffee wash', 20)
 # print('Expected Output: ...')
 # print('Actual Output:', plaintext.get_message_text_encrypted())
     
-#Example test case (CiphertextMessage)
-ciphertext = CiphertextMessage('Gymmuay cm Hihmyhmy qilxm: mqyun hivixs gcfx gixyluny jummuay izzcwcuf gyfn movmnuhwy zihx xiil zugcfs mfcabn lyguch moh aipylh xyux vuhe miwe bifx vlomb xcpcxy yhx uwwyjn cn qbify willywn hilnb wiohnls zfiun ualyy inbylqcmy woj qchx wizzyy qumb')
-print('Expected Output:', ('...', 'Message is Nonsense words: sweat nobody mild moderate passage official melt substance fond door family slight remain sun govern dead bank sock hold brush divide end accept it whole correct north country float agree otherwise cup wind coffee wash'))
-print('Actual Output:', ciphertext.decrypt_message())
+# #Example test case (CiphertextMessage)
+# ciphertext = CiphertextMessage('Gymmuay cm Hihmyhmy qilxm: mqyun hivixs gcfx gixyluny jummuay izzcwcuf gyfn movmnuhwy zihx xiil zugcfs mfcabn lyguch moh aipylh xyux vuhe miwe bifx vlomb xcpcxy yhx uwwyjn cn qbify willywn hilnb wiohnls zfiun ualyy inbylqcmy woj qchx wizzyy qumb')
+# print('Expected Output:', ('...', 'Message is Nonsense words: sweat nobody mild moderate passage official melt substance fond door family slight remain sun govern dead bank sock hold brush divide end accept it whole correct north country float agree otherwise cup wind coffee wash'))
+# print('Actual Output:', ciphertext.decrypt_message())
