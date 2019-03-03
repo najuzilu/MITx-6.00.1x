@@ -11,14 +11,14 @@ def load_words(file_name):
     Depending on the size of the word list, this function may
     take a while to finish.
     '''
-    print('Loading word list from file...')
+    #print('Loading word list from file...')
     # inFile: file
     in_file = open(file_name, 'r')
     # line: string
     line = in_file.readline()
     # word_list: list of strings
     word_list = line.split()
-    print('  ', len(word_list), 'words loaded.')
+    #print('  ', len(word_list), 'words loaded.')
     in_file.close()
     return word_list
 
@@ -102,7 +102,27 @@ class Message(object):
         Returns: a dictionary mapping a letter (string) to 
                  another letter (string). 
         '''
-        pass #delete this line and replace with your code here
+        lower_case = string.ascii_lowercase
+        upper_case = string.ascii_uppercase
+
+        def convert(string, shift):
+            string_dict = {}
+
+            for i in range(0, len(string)):
+                new_index = i + shift
+
+                if new_index >= len(string):
+                    new_index = new_index - len(string)
+                    string_dict[string[i]] = string[new_index]
+                else:
+                    string_dict[string[i]] = string[new_index]
+
+            return string_dict
+
+        lower_case_dict = convert(lower_case, shift)
+        upper_case_dict = convert(upper_case, shift)
+
+        return {**lower_case_dict, **upper_case_dict}
 
     def apply_shift(self, shift):
         '''
@@ -116,7 +136,15 @@ class Message(object):
         Returns: the message text (string) in which every character is shifted
              down the alphabet by the input shift
         '''
-        pass #delete this line and replace with your code here
+
+        shift_dictionary = self.build_shift_dict(shift)
+        new_message = []
+        for char in self.message_text:
+            if char in shift_dictionary.keys():
+                new_message.append(shift_dictionary[char])
+            else:
+                new_message.append(char)
+        return ''.join(x for x in new_message)
 
 class PlaintextMessage(Message):
     def __init__(self, text, shift):
