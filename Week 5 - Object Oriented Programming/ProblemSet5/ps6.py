@@ -221,7 +221,7 @@ class CiphertextMessage(Message):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        Message.__init__(self, text)
 
     def decrypt_message(self):
         '''
@@ -239,14 +239,24 @@ class CiphertextMessage(Message):
         Returns: a tuple of the best shift value used to decrypt the message
         and the decrypted message text using that shift value
         '''
-        pass #delete this line and replace with your code here
+        dict_answer = {}
+
+        for key in range(26):
+            decrypt_message = Message.apply_shift(self, key)
+            words = decrypt_message.split(' ')
+            valid_word_list = [w for w in words if is_word(self.valid_words, w)]
+            dict_answer[key] = len(valid_word_list)
+        max_ = max(dict_answer.values())
+        (k, v), = {k : v for k, v in dict_answer.items() if v == max_}.items()
+        return (k, Message.apply_shift(self, k))
+        
 
 #Example test case (PlaintextMessage)
-plaintext = PlaintextMessage('hello', 2)
-print('Expected Output: jgnnq')
-print('Actual Output:', plaintext.get_message_text_encrypted())
+# plaintext = PlaintextMessage('Message is Nonsense words: sweat nobody mild moderate passage official melt substance fond door family slight remain sun govern dead bank sock hold brush divide end accept it whole correct north country float agree otherwise cup wind coffee wash', 20)
+# print('Expected Output: ...')
+# print('Actual Output:', plaintext.get_message_text_encrypted())
     
 #Example test case (CiphertextMessage)
-ciphertext = CiphertextMessage('jgnnq')
-print('Expected Output:', (24, 'hello'))
+ciphertext = CiphertextMessage('Gymmuay cm Hihmyhmy qilxm: mqyun hivixs gcfx gixyluny jummuay izzcwcuf gyfn movmnuhwy zihx xiil zugcfs mfcabn lyguch moh aipylh xyux vuhe miwe bifx vlomb xcpcxy yhx uwwyjn cn qbify willywn hilnb wiohnls zfiun ualyy inbylqcmy woj qchx wizzyy qumb')
+print('Expected Output:', ('...', 'Message is Nonsense words: sweat nobody mild moderate passage official melt substance fond door family slight remain sun govern dead bank sock hold brush divide end accept it whole correct north country float agree otherwise cup wind coffee wash'))
 print('Actual Output:', ciphertext.decrypt_message())
