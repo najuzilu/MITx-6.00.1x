@@ -725,6 +725,313 @@ print(mopsy == cotton)
 ```
 * `tag` used to give **unique id** to each new rabbit instance
 
+## An extended example ##
+
+### Building a class ###
+
+```python
+import datetime
+
+class Person(object):
+	def __init__(self, name):
+		''' create a person called name '''
+		self.name = name
+		self.birthday = None
+		self.lastName = name.split(' ')[-1]
+
+	def getLastName(self):
+		''' return self's last name '''
+		return self.lastName
+
+	def __str__(self):
+		''' return self's name '''
+		return self.name
+
+	def setBirthday(self, month, day, year):
+		''' sets self's birthday to birthday '''
+		self.birthday = datetime.date(year, month, day)
+
+	def getAge(self):
+		''' return's self's current age in days '''
+		if self.birthday == None:
+			raise ValueError
+		return (datetime.date.today() - self.birthday).days
+
+	def __lt__(self, other):
+		''' return True if self's name is lexicographically less than other's name, and False otherwise '''
+		if self.lastName == other.lastName:
+			return self.name < other.name
+		return self.lastName < other.lastName
+```
+```python
+p1 = Person('Mark Zuckerberg')
+p1.setBirthday(5, 14,84)
+p2 = Person('Drew Houston')
+p2.setBirthday(3, 4, 83)
+p3 = Person('Bill Gates')
+p3.setBirthday(10, 28, 55)
+p4 = Person('Andrew Gates')
+p5 = Person('Steve Wozniak')
+
+personList = [p1, p2, p3, p4, p5]
+```
+
+```python
+for e in personList:
+	print(e)
+
+personList.sort()
+
+for e in personList:
+	print(e)
+```
+
+### Visualizing the hierarchy ###
+
+```Python
+class MITPerson(Person):
+	nextIdNum = 0
+
+	def __init__(self, name):
+		Person.__init__(self, name)
+		self.idNum = MITPerson.nextIdNum
+		MITPerson.nextIdNum += 1
+
+	def getIdNum(self):
+		return self.idNum
+
+	def __lt__(self, other):
+		return self.idNum < other.idNum
+
+	def speak(self, utterance):
+		return (self.getLastName() + ' says: ' + utterance)
+```
+
+```Python
+m3 = MITPerson('Mark Zuckerberg')
+Person.setBirthday(m3, 5, 14, 84)
+m2 = MITPerson('Drew Houston')
+Person.setBirthday(m2, 3, 4, 83)
+m1 = MITPerson('Bill Gates')
+Person.setBirthday(m1, 10, 28, 55)
+
+MITPersonList = [m1, m2, m3]
+```
+```python
+for e in MITPersonList:
+	print(e)
+
+MITPersonList.sort()
+
+for e in MITPersonList:
+	print(e)
+```
+
+```python
+p1 = MITPerson('Eric')
+p2 = MITPerson('John')
+p3 = MITPerson('John')
+p4 = Person('John')
+```
+
+```python
+p1 < p2
+p1 < p4 # ATTRIBUTE ERROR
+p1 < p4 # p1.__lt__(p2) 
+```
+
+### Adding another class ###
+
+```python
+class UG(MITPerson):
+	def __init__(self, name, classYear):
+		MITPerson.__init__(self, name)
+		self.year = classYear
+
+	def getClass(self):
+		return self.year
+
+	def speak(self, utterance):
+		return MITPerson.speak(self, "Dude, " + utterance)
+
+class Grad(MITPerson):
+	pass
+
+def isStudent(obj):
+	return isinstance(obj, UG) or isinstance(obj, Grad)
+```
+
+```python
+s1 = UG('Matt Damon', 2017)
+s2 = UG('Ben Affleck', 2017)
+s3 = UG('Lin Manuel Miranda', 2018)
+s4 = Grad('Leonardo di Caprio')
+
+print(s1)
+print(s1.getClass())
+print(s1.speak('where is the quiz?'))
+print(s2.speak('I have no clue!'))
+```
+
+```python
+class Student(MITPerson):
+	pass
+
+class UG(Student):
+	def __init__(self, name, classYear):
+		MITPerson.__init__(self, name)
+		self.year = classYear
+
+	def getClass(self):
+		return self.year
+
+	def speak(self, utterance):
+		return MITPerson.speak(self, "Dude, " + utterance)
+
+class TransferStudent(Student):
+	pass
+
+class Grad(Student):
+	pass
+
+def isStudent(obj):
+	return isinstance(obj, Student)
+```
+
+**Substitution principle**: important behaviors of superclass should be supported by all subclasses.
+
+### Using inherited methods ###
+
+```python
+class Professor(MITPerson):
+	def __init__(self, name, department):
+		MITPerson.__init__(self, name)
+		self.department = department
+
+	def speak(self, utterance):
+		new = 'In course ' + self.department + ' we say '
+		return MITPerson.speak(self, new + utterance)
+
+	def lecture(self, topic):
+		return self.speak('it is obvious that ' + topic)
+```
+
+###  Exercise 1 ###
+1. There are two ways to write the `Hand.update` method: you could write this method in a way that gets rid of the key letter in the attribute `hand` dictionary when the frequency of the letter falls to 0, or write it in a way that leaves the key letter in the attribute `hand` dictionary even when the frequency of the letter falls to 0.
+
+Will the two different implementations of the `Hand.update` method lead to `Hand` objects having different hand internal attributes?  
+**Answer**: Yes, depending on what happened during the `update` call
+
+2. Does the calculateLen method, as defined, return different values for the two different implementations of the update method?  
+**Answer**: No
+
+### Gradebook example ###
+
+```python
+class Grades(object):
+	'''A mapping from students to a list of grades '''
+	def __init__(self):
+		'''Create empty grade book'''
+		self.students = []
+		self.grades = {}
+		self.isSorted = True
+
+	def addStudent(self, student):
+		''' Assumes: student is of type Student
+			Add student to the grade book '''
+		if student in self.students:
+			raise ValueError('Duplicate student')
+		self.students.append(student)
+		self.grades[student.getIdNum()] = []
+		self.isSorted = False
+
+	def addGrades(self, student, grade):
+		''' Assumes: grade is a float
+			Add grade to the list of grades for student '''
+		try:
+			self.grades[student.getIdNum()].append(grade)
+		except KeyError:
+			raise ValueError('Student not in grade book')
+
+	def getGrades(self, student):
+		''' Return a list of grades for student '''
+		try:
+			return self.grades[student.getIdNum()][:] # return copy of list
+		except KeyError:
+			raise ValueError('Student not in grade book')
+
+	def allStudents(self):
+		''' Return a list of the students in the grade book '''
+		if not self.isSorted:
+			self.students.sort()
+			self.isSorted = True
+		return self.students[:] # return copy of list of students
+```
+
+```python
+def gradeReport(course):
+	''' Assumes: course is of type grades '''
+	report = []
+	for s in course.allStudents():
+		tot = 0.0
+		numGrades = 0
+		for g in course.getGrades(s):
+			tot += g
+			numGrades += 1
+		try:
+			average = tot/numGrades
+			report.append(str(s) + '\'s mean grade is ' + str(average))
+		except ZeroDivisionError:
+			report.append(str(s) + ' has no grades')
+		return '\n'.join(report)
+```
+
+### Generators ###
+Any procedure or method with `yield` statement is called a **generator**
+
+```python
+def genTest():
+	yield 1
+	yield 2
+
+foo = genTest()
+foo.__next__() # > 1
+foo.__next__() # > 2
+foo.__next__() # ERROR
+```
+
+* generators have next() method which starts/resumes execution of the procedure. Inside of generator:
+	* `yield` susponds execution and returns a value
+	* returning from a generator raises a StopIteration exception
+
+```python
+def genFib():
+	fibn_1 = 1 #fib(n-1)
+	fibn_2 = 0 #fib(n-2)
+	while True:
+		# fib(n) = fib(n-1) + fib(n-2)
+		next = fibn_1 + fibn_2
+		yield next
+		fibn_2 = fibn_1
+		fibn_1 = next
+```
+
+Why user generators?
+* generator separates the concept of computing a very long sequence of objects, from the actual process of computing them explicitly
+* allows one to generate each new objects as needed as part of another computation (rather than computing a very long sequence, only to throw most of it away while you do something on an element, then repeating the process)
+* have already seen this idea in `range`  
+
+Fix to grades class
+```python
+def allStudents(self):
+	''' Return a list of the students in the grade book '''
+	if not self.isSorted:
+		self.students.sort()
+		self.isSorted = True
+
+	for s in self.students:
+		yield s
+```
 
 
 
