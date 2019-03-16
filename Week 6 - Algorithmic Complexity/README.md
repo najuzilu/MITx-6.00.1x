@@ -5,13 +5,16 @@
 How can we decide which option for program is most efficient? 
 * We separate **time and space efficiency** of a program
 * tradeoff between them - will focus on time efficiency  
+
 Challenges in understanding efficiency of solution to a computational problem:
 * a program can be implemented in many different ways
 * you can solve a problem using a handful of different algorithms  
+
 How to evaluate efficiency of programs?
 * measure with a **timer**
 * **count** the operations
 * abstract notion of **order of growth**  
+
 Timing programs is inconsistent:
 * GOAL: to evaluate different algorithms
 * running time **varies between algorithms**
@@ -19,21 +22,25 @@ Timing programs is inconsistent:
 * running time **varies between computers**
 * running time is **predictable** based on small inputs  
 _Time varies for different inputs but cannot really express a relationship between inputs and time_  
+
 Counting operations:
 * count **depends on algorithm**
 * count **depends on implementations**
 * count **independent of computers**
 * no real definition of **which operations** to count  
 _Count varies for different inputs and can come up with a relationship between inputs and the count_  
+
 Need to choose which input to use to evaluate a function  
 * want to express efficiency in terms of input, so need to decide what your input is
 * could be an integer
 * could be the length of list
 * you decide when multiple parameters to a function  
+
 Suppose you are given a list `L` of some length `len(L)`
 * **best case**: minimum running time over all possible inputs of a given size, len(L)
 * **average case**: average running time over all possible inputs of a given size, `len(L)` _practical measure_
 * **worst case**: maximum running time over all possible inputs of a given size, `len(L)`  
+
 Types of orders of growth:
 * constant
 * linear
@@ -54,8 +61,8 @@ def linearSearch(L, x):
 2. Worst Case Run Time: `linearSearch([13, 9, 22, 3, 10, 17, 11, 2, 12], 26)`
 3. Average Case Run Time: `linearSearch([9, 3, 12, 24, 7, 8, 23, 11, 19], 8)`
 4. What is the number of steps it will take to run `linearSearch` in the best case? Express your answer in terms of `n`, the number of elements in the list `L`.
-* 1
-* 2n + 1
+    * 1
+    * 2n + 1
 
 #### Exercise 2 ####
 1. program 1
@@ -117,12 +124,14 @@ Big Oh or O() is used to describe worst case
 * worst case occurs often and is the bottleneck when a program runs
 * express rate of growth of program relative to the input size
 * evaluate algorithm not machine or implementation  
+
 Examples:
 1. n^2 + 2n + 2 : O(n^2)
 2. n^2 + 10000n + 3^1000 : O(n^2)
 3. log(n) + n + 4 : n
 4. 0.0001 * n * log(n) + 300n : O(n log(n))
 5. 2n^30 + 3^n : O(3^n)  
+
 Complexity classes ordered low to high:
 O(1) - constant
 O(log n) - logarithmic
@@ -130,6 +139,7 @@ O(n) - linear
 O(n log n) - loglinear
 O(n^c) - polynomial
 O(c^n) - exponential  
+
 **Law of Addition** for O():
 * used with **squential** statements
 * O(f(n)) + O(g(n)) is O(f(n) + g(n))
@@ -345,6 +355,7 @@ def fib_recur(n):
     * reverse   O(n)
     * iteration O(n)
     * in list   O(n)
+
 * Dictionaries: `n` is `len(d)`
     * worst case
         * index         O(n)
@@ -583,21 +594,26 @@ def merge_sort(L):
 
 Every time it's asked to, it performs a linear search through list L to find whether it contains x.
 
-88Application B:**
+**Application B:**
 
 Sort list L once before doing anything else (using mergeSort). Whenever it's asked to find x in L, it performs a binary search on L.
 
 1. If the application is asked to find x in L exactly one time, what is the worst case time complexity for Application A?  
 **Answer**: O(n)
+
 2. If the application is asked to find x in L exactly one time, what is the worst case time complexity for Application B?  
 **Answer**: O(n log n)
+
 3. If the application is asked to find x in L k times, what is the worst case time complexity for Application A?  
 **Answer**: O(kn)
+
 4. If the application is asked to find x in L k times, what is the worst case time complexity for Application B?  
 **Answer**: O(n log n + k log n)
+
 5. What value(s) of k would make Application A be faster (i.e., asymptotically grow slower than) Application B?  
 **Answer**: k = 1  
 **Explanation**: When k = 1, A's complexity is O(kn)=O(n), B's complexity is O(n log n + k log n) = O(n log n + log n)
-6.What value(s) of k would make Application A grow at the same rate as Application B?  
+
+6. What value(s) of k would make Application A grow at the same rate as Application B?  
 **Answer**: k = log n  
 **Explanation**: When k = log n, A's complexity is O(kn)=O(n log n) and B's complexity is O(n log n + k log n) = O(n log n + log n log n). log n log n grows slower than n log n, so in this case B's complexity is O(n log n).
