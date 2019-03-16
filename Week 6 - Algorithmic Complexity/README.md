@@ -377,3 +377,227 @@ n ** n
 2 ** (n ** 2)
 
 ### Searching and Sorting Algorithms ###
+
+**Search Algorithm** - algorithm where I want to find an element, or an item, or a group of items with specific properties within a much larger collection of items.
+* Collection could be implicit:
+    * example: find square root in a search problem
+* Collection could be explicit:
+    * example: is a student record stored in a collection of data
+
+Search Algorithm:
+* linear search
+    * **brute force** search
+    * list does not have to be sorted
+* bisection search
+    * list **MUST be sorted** to give correct answer
+
+Linear Search on Unsorted List:
+```python
+def linear_search(L, e):
+    found = False
+    for i in range(len(L)):
+        if e == L[i]:
+            found = True
+    return found
+```
+
+Linear Search on Sorted List:
+```python
+def search(L, e):
+    for i in range(len(L)):
+        if L[i] == e:
+            return True
+        if L[i] > e:
+            return False
+    return False
+```
+
+Bisection Search Implementation 1 - O(n log n):
+```python
+def bisect_search1(L, e):
+    if L == []:
+        return False
+    elif len(L) == 1:
+        return L[0] == e
+    else:
+        half = len(L)//2
+        if L[half] > e:
+            return bisect_search1( L[:half], e)
+        else:
+            return bisect_search1( L[half:], e)
+```
+
+Bisection Search Implementation 2 - O(log n):
+```python
+def bisect_search2(L, e):
+    def bisect_search_helper(L, e, low, high):
+        if high == low:
+            return L[low] == e
+        mid = (low + high)//2
+        if L[mid] == e:
+            return True
+        elif L[mid] > e:
+            if low == mid: # nothing left to search
+                return False
+            else:
+                return bisect_search_helper(L, e, low, mid - 1)
+        else:
+            return bisect_search_helper(L, e, mid + 1, high)
+
+    if len(L) == 0:
+        return False
+    else:
+        return bisect_search_helper(L, e, 0, len(L) - 1)
+```
+
+_When does it make sense to **sort first then search**?_  
+* SORT + O(log n) < O(n) --> SORT < O(n) - O(log n)
+* when sorting is less than O(n) --> never true!
+
+Amortized Cost:
+* why bother sorting first?
+* in come cases, may sort a list once then do many searches
+* **AMORTIZED cost** of the sort over many searches
+* SORT + K * O(log n) < K * O(n) --> for large K, **SORT time becomes irrelevant**
+
+### Bogo Sort ###
+Aka monkey sort, bogosort, stupid sort, slowsort, permutation sort, shotgun sort
+* Randomly assign numbers in list, check to see if they're sorted, if not, randomly assign numbers in list
+
+```python
+def bogo_sort(L):
+    while not is_sorted(L):
+        random.shuffle(L)
+```
+* Best case: O(n) where n is len(L) to check if sorted
+* Worst case: O(?) it is unbounded if really unlucky
+
+### Bubble Sort ###
+* **compare consecutive pairs** of elements
+* **swap elements** in pair such that smaller is first
+* when reach end of list, **start over** again
+* stop when **no more swps** have been made
+
+```python
+def bubble_sort(L):
+    swap = False
+    while not swap:
+        swap = True
+        for j in range(1, len(L)):
+            if L[j-1] > L[j]:
+                swap = False
+                temp = L[j]
+                L[j] = L[j-1]
+                L[j-1] = temp
+```
+* **O(n^2) where n is len(L)** to do len(L)-1 comparisons and len(L)-1 passes
+
+### Selection Sort ###
+* loop invariant
+    * given a prefix of list L[0:i] and suffix L[i+1:len(L)], then prefix is sorted and no element in prefix is larger than smallest element in suffix
+        1. base case: prefix empty; suffix whole list - invariant true
+        2. induction step: move minimum element from suffix to end of prefix. Since invariant true before move, prefix sorted after append
+        3. when exit, prefix is entire list, suffix empty, so sorted
+
+```python
+def selection_sort(L):
+    suffixSt = 0
+    while suffixSt != len(L):
+        for i in range(suffixSt, len(L)):
+            if L[i] < L[suffixSt]:
+                L[suffixSt], L[i] = L[i], L[suffixSt]
+        suffixSt += 1
+```
+Complexity of selection sort is **O(n^2) where n is len(L)**
+
+### Merge Sort ###
+* use a divide-and-conquer approach
+    1. if list is of length 0 or 1, already sorted
+    2. if list has more than one element, split into two lists, and sort each
+    3. merge sorted sublists
+        1. look at first element of each, move smaller to end of the result
+        2. when one list is empty, just copy rest of other list
+
+Example of merging:
+| Left in list 1 | Left in list 2 | Compare  | Result |
+| ------------- |:-------------:| -----:| -----:|
+| [1,5,12,18,19,20] | [2,3,4,17] | 1,2 | [] |
+| [5,12,18,19,20] | [2,3,4,17] | 5,2 | [1] |
+| [5,12,18,19,20] | [3,4,17] | 5,3 | [1,2] |
+| [5,12,18,19,20] | [4,17] | 5,4 | [1,2,3] |
+| [5,12,18,19,20] | [17] | 5,17 | [1,2,3,4] |
+| [12,18,19,20] | [17] | 12,17 | [1,2,3,4,5] |
+| [18,19,20] | [17] | 18,17 | [1,2,3,4,5,12] |
+| [18,19,20] | [] | 18,-- | [1,2,3,4,5,12,17] |
+
+```python
+def merge(left, right):
+    result = []
+    i, j = 0, 0
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    while (i < len(left)):
+        result.append(left[i])
+        i += 1
+    while (j < len(right)):
+        result.append(right[j])
+        j += 1
+    return result
+```
+* go through two lists, only one pass
+* compare only **smallest elements in each sublist**
+* O(len(left) + len(right)) copied elements
+* O(len(longer list)) comparisons
+* **linear in length of the list**
+
+Merge sort algorithm -- recursive:
+```python
+def merge_sort(L):
+    if len(L) < 2:
+        return L[:]
+    else:
+        middle = len(L)//2
+        left = merge_sort(L[:middle])
+        right = merge_sort(L[middle:])
+        return merge(left, right)
+```
+* at **first level of recursion level**
+    * n/2 elements in each list
+    * O(n) + O(n) = O(n) where n is len(L)
+* at **second recursion level**
+    * n/4 elements in each list
+    * two merges --> O(n) where n is len(L)
+* each recursion level is O(n) where n is len(L)
+* **dividing list in half** with each recursive call
+    * O(log(n)) where n is len(L)
+* overall complexity is **O(n log n) where n is len(L)**
+
+
+### Exercise 7 ###
+**Application A:**
+
+Every time it's asked to, it performs a linear search through list L to find whether it contains x.
+
+88Application B:**
+
+Sort list L once before doing anything else (using mergeSort). Whenever it's asked to find x in L, it performs a binary search on L.
+
+1. If the application is asked to find x in L exactly one time, what is the worst case time complexity for Application A?  
+**Answer**: O(n)
+2. If the application is asked to find x in L exactly one time, what is the worst case time complexity for Application B?  
+**Answer**: O(n log n)
+3. If the application is asked to find x in L k times, what is the worst case time complexity for Application A?  
+**Answer**: O(kn)
+4. If the application is asked to find x in L k times, what is the worst case time complexity for Application B?  
+**Answer**: O(n log n + k log n)
+5. What value(s) of k would make Application A be faster (i.e., asymptotically grow slower than) Application B?  
+**Answer**: k = 1  
+**Explanation**: When k = 1, A's complexity is O(kn)=O(n), B's complexity is O(n log n + k log n) = O(n log n + log n)
+6.What value(s) of k would make Application A grow at the same rate as Application B?  
+**Answer**: k = log n  
+**Explanation**: When k = log n, A's complexity is O(kn)=O(n log n) and B's complexity is O(n log n + k log n) = O(n log n + log n log n). log n log n grows slower than n log n, so in this case B's complexity is O(n log n).
