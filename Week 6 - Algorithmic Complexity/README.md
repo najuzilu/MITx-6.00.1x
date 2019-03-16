@@ -300,7 +300,10 @@ def h(n):
         answer += int(c)
     return answer
 ```
-**Answer**: O(log n)s
+**Answer**: O(log n)
+* convert integer to string
+* iterate over **length of string**, not magnitude of input n
+* think of it like dividing n by 10 each iteration
 
 ```python
 def fib_iter(n):
@@ -356,12 +359,21 @@ def fib_recur(n):
         * iteration     O(n)
 
 #### Exercise 7 ####
-1.
-2.
-3.
-4.
+1. O(len(s))
+2. O(log(len(s)))
+3. O(n^2)
+4. O(n^2)
 
 #### Exercise 8 ####
-1.
+1. 500,000
+log log n
+log n
+n 
+n * log n
+n ** 2
+n ** 3
+3 ** n
+n ** n
+2 ** (n ** 2)
 
 ### Searching and Sorting Algorithms ###
