@@ -119,7 +119,7 @@ def program3(L):
 
 #### Big Oh Notation ####
 
-Big Oh notation meadures an **uper bound on the asymptotic growth**, often called order of growth  
+Big Oh notation meadures an **upper bound on the asymptotic growth**, often called order of growth  
 Big Oh or O() is used to describe worst case
 * worst case occurs often and is the bottleneck when a program runs
 * express rate of growth of program relative to the input size
