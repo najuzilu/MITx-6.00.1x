@@ -126,3 +126,34 @@ def is_list_permutation(L1, L2):
 For example,
 * if `L1 = ['a', 'a', 'b']` and `L2 = ['a', 'b']` then `is_list_permutation` returns `False`
 * if `L1 = [1, 'b', 1, 'c', 'c', 1]` and `L2 = ['c', 1, 'b', 1, 1, 'c']` then `is_list_permutation` returns `(1, 3, <class 'int'>)` because the integer 1 occurs the most, 3 times, and the type of 1 is an integer (note that the third element in the tuple is not a string).
+
+### Problem 5 ###
+
+You are given a dictionary aDict that maps integer keys to integer values. Write a Python function that returns a list of keys in aDict that map to dictionary values that appear exactly once in `aDict`.
+
+* This function takes in a dictionary and returns a list.
+* Return the list of keys in increasing order.
+* If `aDict` does not contain any values appearing exactly once, return an empty list.
+* If `aDict` is empty, return an empty list.
+
+For example:
+If` aDict = {1: 1, 3: 2, 6: 0, 7: 0, 8: 4, 10: 0}` then your function should return `[1, 3, 8]`
+If `aDict = {1: 1, 2: 1, 3: 1}` then your function should return `[]`
+
+```python
+def uniqueValues(aDict):
+    '''
+    aDict: a dictionary
+    returns: a sorted list of keys that map to unique aDict values, empty list if none
+    '''
+    # Your code here
+    output = []
+    list_values = list(aDict.values())
+    
+    for k, v in aDict.items():
+    	if list_values.count(v) == 1:
+    		output.append(k)
+   	output.sort()
+    return output
+
+```
